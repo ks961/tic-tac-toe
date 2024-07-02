@@ -17,11 +17,11 @@ Make sure you have Node.js and npm installed.
    ```sh
    git clone https://github.com/ks961/tic-tac-toe.git
 
-2. cd tic-tac-toe
+2. ```sh cd tic-tac-toe
 
-3. npm install
+3. ```sh npm install
 
-4. npm run build
+4. ```sh npm run build
 
 The build artifacts will be stored in the `dist` directory. Your app is ready to be deployed!
 
