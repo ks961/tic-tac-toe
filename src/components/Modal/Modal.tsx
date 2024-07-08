@@ -1,25 +1,22 @@
-import { ReactNode, useRef } from "react";
+import { ReactNode } from "react";
 import "./modal.styles.css";
 
 export type ModalProps = {
     toShow: boolean,
+    toggleModal: () => void,
     children: ReactNode | ReactNode[],
 } & React.ComponentPropsWithoutRef<"div">
 
-export default function Modal({ toShow, children, ...attribs }: ModalProps) {
+export default function Modal({ toShow, toggleModal, children, ...attribs }: ModalProps) {
 
-    const modalRef = useRef<HTMLDivElement>(null);
 
-    function handleToggleModal() {
-        modalRef.current?.classList.toggle("show");
-    }
 
     return(
         <div>
-            <div ref={modalRef} className={`modal ${toShow ? "show" : ""}`} {...attribs}>
+            <div className={`modal ${toShow ? "show" : ""}`} {...attribs}>
                 {children}
             </div>
-            <div className="modal-bg" onClick={handleToggleModal} />
+            <div className="modal-bg" onClick={toggleModal} />
         </div>
     );
 }

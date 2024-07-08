@@ -1,20 +1,25 @@
-import { ReactNode } from "react";
+import Cell from "../Cell/Cell";
+import { PlayItem } from "@/App.types";
 
 export type RowProps = {
-    children: ReactNode | ReactNode[],
+    rowIdx: number,
+    rows: PlayItem[],
 }
 
-const styles: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottom: "1px solid #0c0c0c"
-}
-
-export default function Row({ children }: RowProps) {
+export default function Row({ rows, rowIdx }: RowProps) {
+    
     return(
-        <div style={styles}>
-            {children}
+        <div className="flex items-center last:border-none border-b-[1px] border-solid border-text">
+            {
+                rows.map((colPlayItem, colIdx) => (
+                    <Cell
+                        key={colIdx} 
+                        playItem={colPlayItem} 
+                        data-row={`${rowIdx}`} 
+                        data-col={`${colIdx}`} 
+                    />
+                ))
+            }
         </div>
     );
 }

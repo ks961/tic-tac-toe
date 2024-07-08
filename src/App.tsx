@@ -1,32 +1,43 @@
-import { useState } from 'react'
-import { Board } from './components/Board/Board.tsx';
-import { boardSize } from './config.ts';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import Home from "./pages/Home";
+import { AuthContextProvider } from "./contexts/AuthContext";
+import Login from "./pages/Login";
+import ThemeProvider from "./contexts/ThemeContext/ThemeContext";
+import Multiplayer from "./pages/Multiplayer";
+import Singleplayer from "./pages/Singleplayer";
+import BoardConfigProvider from "./contexts/BoardConfig";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <ProtectedRoute element={<Home />} />
+  },
+  {
+    path: "/login",
+    element: <Login />
+  },
+  {
+    path: "/multiplayer/:gameSessionId",
+    element: <ProtectedRoute element={<Multiplayer />} />
+  },
+  {
+    path: "/singleplayer",
+    element: <ProtectedRoute element={<Singleplayer />} />
+  },
+])
 
 function App() {
-
-  const [ currentBoardSize, setCurrentBoardSize ] = useState<number>(boardSize);
-
-  function handleOnBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { value } = event.target;
-    const size = parseInt(value);
-    
-    if(isNaN(size) || size <= 1 || size > 10) return;
-    setCurrentBoardSize(size);
-  }
-
-  return(
-    <div style={{width: "100%", height: "100%", display: "grid", placeContent: "center"}}>
-      <input 
-        style={{padding: "4px 8px", width: "5rem", position: "fixed", top: "10px", left: "10px"}} 
-        type="number" 
-        name="boardSize" 
-        id="boardSize"
-        value={currentBoardSize} 
-        onChange={handleOnBoardSizeChange}
-        step={1}
-      />
-      <Board currentBoardSize={currentBoardSize} />
-    </div>
+  return (
+    <AuthContextProvider>
+      <ThemeProvider>
+        <BoardConfigProvider>
+          <div className="bg-background h-full">
+            <RouterProvider router={router} />
+          </div>
+        </BoardConfigProvider>
+      </ThemeProvider>
+    </AuthContextProvider>
   )
 }
 
