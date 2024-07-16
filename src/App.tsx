@@ -17,6 +17,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import SignupVerification from "./pages/SignupVerification";
 import ForgotPasswordVerification from "./pages/ForgotPasswordVerification";
 import CreateNewPassword from "./pages/CreateNewPassword";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
   {
     path: "/singleplayer",
     element: <ProtectedRoute element={<SinglePlayer />} />
+  },
+  {
+    path: "/*",
+    element: <NormalRoute element={<ErrorPage />} />
   },
 ])
 
