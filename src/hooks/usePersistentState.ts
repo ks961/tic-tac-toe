@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type InitializerFunc<T> = () => T;
 
@@ -6,7 +6,9 @@ export type UpdateStateCallback<T> = (prev: T) => T;
 
 export type UpdateState<T> = (newState: T | UpdateStateCallback<T>) => void;
 
-export type PersistentStateReturnType<T> = [ T, UpdateState<T> ];
+export type CleaupStorage = () => void;
+
+export type PersistentStateReturnType<T> = [ T, UpdateState<T>, CleaupStorage ];
 
 export type ConfigType = {
     deferredStore: boolean
@@ -17,6 +19,10 @@ export default function usePersistentState<T>(
     initialValue: T | InitializerFunc<T>, 
     config?: ConfigType
 ): PersistentStateReturnType<T> {
+
+    const cleanupStateRef = useRef<boolean>(false);
+    const deferredStoreRef = useRef<boolean>(config?.deferredStore || false);
+
     const [ state, setState ] = useState<T>(() => {
         
         try {            
@@ -30,15 +36,25 @@ export default function usePersistentState<T>(
     });
 
     useEffect(() => {
-        if(config?.deferredStore) return;
+        if(cleanupStateRef.current) {
+            localStorage.removeItem(key);
+            cleanupStateRef.current = false;
+            return;
+        }
+
+        if(deferredStoreRef.current) return;
         
         localStorage.setItem(key, JSON.stringify(state));
+
+        return () => {
+            localStorage.removeItem(key);
+        }
 
     }, [state]);
 
     function updateState(newState: T | UpdateStateCallback<T>) {
-        if(config?.deferredStore) {
-            config.deferredStore = false;
+        if(deferredStoreRef.current) {
+            deferredStoreRef.current = false;
         }
         
         if(typeof newState === "function")
@@ -46,6 +62,11 @@ export default function usePersistentState<T>(
 
         setState(newState);
     }
+    
+    function cleanup() {
+        cleanupStateRef.current = true;
+        setState(initialValue);
+    }
 
-    return [ state, updateState ];
+    return [ state, updateState, cleanup ];
 }

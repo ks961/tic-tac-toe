@@ -17,6 +17,10 @@ module.exports = {
         "secondary": "hsl(var(--secondary))",
         "accent": "hsl(var(--accent))",
         "black": "#0f0f0f",
+      },
+      fontFamily: {
+        "lato": ['"Lato", sans-serif'],
+        "playwrite-cuba": ['"Playwrite CU", cursive'],
       }
     },
   },

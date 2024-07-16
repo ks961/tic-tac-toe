@@ -16,7 +16,7 @@ export default function BoardConfigProvider({ children }: BoardConfigProviderPro
         cellHeight: CellSize.height,
         setBoardConfig,
     });
-
+ 
     const configMemoized = useMemo(() => configState, [configState]);
 
     function setBoardConfig<T extends BoardConfigContextPropsKeys>(

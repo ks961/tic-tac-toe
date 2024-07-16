@@ -27,3 +27,8 @@
 html, body {
   height: 100%;
 }
+
+/* ::selection {
+  color: hsl(var(--text));
+  background: hsl(var(--background));
+} */

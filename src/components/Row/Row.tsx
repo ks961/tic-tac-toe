@@ -1,9 +1,9 @@
 import Cell from "../Cell/Cell";
-import { PlayItem } from "@/App.types";
+import { EPLAY_ITEM } from "@/App.types";
 
 export type RowProps = {
     rowIdx: number,
-    rows: PlayItem[],
+    rows: EPLAY_ITEM[],
 }
 
 export default function Row({ rows, rowIdx }: RowProps) {

@@ -1,6 +1,8 @@
+import Navbar from "../Navbar/Navbar";
+import { useAuth } from "@/contexts/AuthContext/AuthContext";
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext/AuthContext";
+// import { useAuth } from "../../contexts/AuthContext/AuthContext";
 
 export type ProtectedRouteProps = {
     [key: string]: any;
@@ -8,12 +10,16 @@ export type ProtectedRouteProps = {
 }
 
 export default function ProtectedRoute({ element }: ProtectedRouteProps) {
+    const { isAuthenticated } = useAuth();
 
-    const { sessionInfo } = useAuth();
-    
-    if (!sessionInfo.token) {
-      return <Navigate to="/login" />;
+    if(!isAuthenticated) {
+      return <Navigate to={"/login"} replace />;
     }
-  
-    return element;
+    
+    return (
+      <>
+        <Navbar navItems={[]} />
+        { element }
+      </>
+    );
 }

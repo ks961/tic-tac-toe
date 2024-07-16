@@ -1,19 +1,13 @@
-import { resolveConflicts } from "@/utils";
-import React, { ReactHTML } from "react";
-import { ReactNode } from "react";
-import { Link } from "react-router-dom";;
+import React from "react";
+import { OnlyAllowedTag, resolveTwConflicts } from "@/utils";
+import Button, { AllowedTags, ButtonProps } from "../Button/Button";
 
-export type LinkType = typeof Link;
-export type AllowedTags = keyof Pick<ReactHTML, "button" | "input"> | LinkType;
 
-type OnlyAllowedTag<T> = T extends AllowedTags ? T : never;
+export type PrimaryButtonProps<C extends React.ElementType> = Omit<ButtonProps<C>, "as"> & {
+    as: OnlyAllowedTag<AllowedTags, C>,
+};
 
-export type PrimaryButtonProps<C extends React.ElementType> = {
-    as: OnlyAllowedTag<C>,
-    className?: string,
-    children: ReactNode | ReactNode[],
-} & React.ComponentPropsWithoutRef<C>;
-
+const defaultClasses = "bg-primary select-none cursor-pointer px-8 py-3 rounded-md text-black shadow-md text-lg font-semibold transform-all duration-300 ease-in-out hover:brightness-125";
 
 export default function PrimaryButton<C extends React.ElementType>({
      as,
@@ -22,7 +16,7 @@ export default function PrimaryButton<C extends React.ElementType>({
      ...attribs
 }: PrimaryButtonProps<C>) {
 
-    const mergedClassNames = resolveConflicts("bg-primary cursor-pointer px-8 py-3 rounded-md text-black shadow-md text-lg font-semibold", className ?? "");
+    const mergedClassNames = resolveTwConflicts(defaultClasses, className ?? "");
     
-    return React.createElement(as, {className: mergedClassNames, ...attribs}, children);
+    return React.createElement(Button, {as, className: mergedClassNames, ...attribs} as any, children);
 }

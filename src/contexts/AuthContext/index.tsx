@@ -1,28 +1,72 @@
+import { useCallback, useEffect, useMemo} from "react";
+import useFetch from "@/hooks/useFetch";
 import usePersistentState from "@/hooks/usePersistentState";
-import { AuthContextProviderProps, SessionInfo, AuthContext } from "./AuthContext";
+import { AuthContextProviderProps, AuthContext, Session, AuthContextType } from "./AuthContext";
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-    const [ sessionInfo, setSessionInfo ] = usePersistentState<SessionInfo>("auth", {
+    
+    const [ session, setSession, cleanup ] = usePersistentState<Session>("session", {
         token: "",
-        username: "",
-    });
+        isAuthenticated: false
+    }, {deferredStore: true});
 
-    function updateSessionInfo(newSessionInfo: SessionInfo) {
-        setSessionInfo(newSessionInfo);
+    const { triggerFetch } = useFetch<boolean>("http://127.0.0.1:3000/verifytoken", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }, session.token, { requestOnExplicitTrigger: true });
+
+    const login = useCallback((newToken: string) => {
+        setSession({
+            token: newToken,
+            isAuthenticated: true
+        });
+    }, [session]);
+    
+    const logout = useCallback(() => {            
+        cleanup();
+
+        setSession({
+            token: "",
+            isAuthenticated: false,
+        });
+    }, [session]);
+    
+    useEffect(() => {
+        if(!session.isAuthenticated) return;
+        
+        (async() => {
+            
+            const isValid = await validateSession();
+            
+            if(!isValid && (session.token.length > 0 || session.isAuthenticated)) {
+                setSession({token: "", isAuthenticated: false});
+                return;
+            }
+        })();
+
+    }, [session.isAuthenticated, session.token]);
+
+    async function validateSession() {
+
+        const isValid: boolean | undefined = await triggerFetch({token: session.token});
+        
+        if(!isValid) return false;
+
+        return isValid;
     }
 
-    function validateSession(): boolean {
-        return false;
-    }
-
-    const value = {
-        sessionInfo,
-        updateSessionInfo,
-        validateSession
-    }
+    const context: AuthContextType = useMemo(() => ({
+            ...session,
+            login,
+            logout,
+            validateSession,
+        }
+    ), [session, login, logout, validateSession]);
 
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={context}>
             {children}
         </AuthContext.Provider>
     )

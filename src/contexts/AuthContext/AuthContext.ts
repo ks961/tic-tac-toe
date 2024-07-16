@@ -1,14 +1,14 @@
 import { createContext, ReactNode, useContext } from "react";
 
-export type SessionInfo = {
+export type Session = {
     token: string,
-    username: string,
+    isAuthenticated: boolean,
 }
 
-export type AuthContextType = {
-    sessionInfo: SessionInfo,
-    validateSession: () => boolean,
-    updateSessionInfo: (newSessionInfo: SessionInfo) => void
+export type AuthContextType = Session & {
+    logout: () => void;
+    login: (newToken: string) => void;
+    validateSession: () => Promise<boolean>,
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
