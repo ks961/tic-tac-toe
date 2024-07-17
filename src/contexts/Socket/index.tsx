@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useMemo, useState } from "react"
 import { io } from "socket.io-client"
 import { SocketContext } from "./Socket";
 import { useAuth } from "../AuthContext/AuthContext";
+import { backendDomain } from "@/config";
 
 
 
@@ -23,7 +24,7 @@ export function SocketContextProvider({ children }: SocketContextProviderProps) 
     useEffect(() => {
         if(socketState.isConnected || !isAuthenticated) return;
         
-        const socket = io("ws://127.0.0.1:3000");
+        const socket = io(`ws://${backendDomain}`);
         
         socket.on("connect", () => {
 

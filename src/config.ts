@@ -9,5 +9,5 @@ export const CellSize = {
 }
 
 export const protocol = "http";
-export const domain = "localhost:3000";
-export const BackendUrl = `${protocol}://${domain}`;
+export const backendDomain = "tapi.sudhanshu.io";
+export const BackendUrl = `${protocol}://${backendDomain}`;

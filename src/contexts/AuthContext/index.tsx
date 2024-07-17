@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo} from "react";
 import useFetch from "@/hooks/useFetch";
 import usePersistentState from "@/hooks/usePersistentState";
 import { AuthContextProviderProps, AuthContext, Session, AuthContextType } from "./AuthContext";
+import { BackendUrl } from "@/config";
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
     
@@ -10,7 +11,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         isAuthenticated: false
     }, {deferredStore: true});
 
-    const { triggerFetch } = useFetch<boolean>("http://127.0.0.1:3000/verifytoken", {
+    const { triggerFetch } = useFetch<boolean>(`${BackendUrl}/verifytoken`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
