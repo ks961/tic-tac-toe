@@ -6,6 +6,7 @@ import ErrorModal from "@/components/ErrorModal/ErrorModal";
 import PrimaryButton from "@/components/PrimaryButton/PrimaryButton";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useVerificationContext } from "@/contexts/VerificationContext/VerificationContext";
+import { BackendUrl } from "@/config";
 
 export default function SignupVerification() {
     
@@ -22,7 +23,7 @@ export default function SignupVerification() {
     const [ otp, setOtp ] = useState<string>("");
     const [ modalError, setModalError ] = useState<string | null>(null);
 
-    const { isLoading, triggerFetch } = useFetch<string>("http://localhost:3000/signup/verification", {
+    const { isLoading, triggerFetch } = useFetch<string>(`${BackendUrl}/signup/verification`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

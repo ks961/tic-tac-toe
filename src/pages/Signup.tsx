@@ -9,6 +9,7 @@ import usePersistentState from "@/hooks/usePersistentState";
 import ErrorModal from "@/components/ErrorModal/ErrorModal";
 import { SingupCredentialDTO, SingupFormDataDTO, formDataToCredentialMapper } from "@/model/DTOs/SignupDtos";
 import { useVerificationContext } from "@/contexts/VerificationContext/VerificationContext";
+import { BackendUrl } from "@/config";
 
 
 export default function Signup() {
@@ -18,7 +19,7 @@ export default function Signup() {
     const { updateVContext } = useVerificationContext();
     const [ modalError, setModalError ] = useState<string | null>(null);
 
-    const { error, isLoading, triggerFetch } = useFetch<string>("http://127.0.0.1:3000/signup", {
+    const { error, isLoading, triggerFetch } = useFetch<string>(`${BackendUrl}/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

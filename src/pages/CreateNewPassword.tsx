@@ -1,6 +1,7 @@
 import ErrorModal from "@/components/ErrorModal/ErrorModal";
 import FormInput from "@/components/FormInput/FormInput";
 import PrimaryButton from "@/components/PrimaryButton/PrimaryButton";
+import { BackendUrl } from "@/config";
 import { useVerificationContext } from "@/contexts/VerificationContext/VerificationContext";
 import useFetch from "@/hooks/useFetch";
 import { isObjectInvalid, capitalCase, validateForm } from "@/utils";
@@ -26,7 +27,7 @@ export default function CreateNewPassword() {
 
     const [ modalError, setModalError ] = useState<string | null>(null);
 
-    const { isLoading, triggerFetch } = useFetch<string>("http://127.0.0.1:3000/login/update-password", {
+    const { isLoading, triggerFetch } = useFetch<string>(`${BackendUrl}/login/update-password`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",

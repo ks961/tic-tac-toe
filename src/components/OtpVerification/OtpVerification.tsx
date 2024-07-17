@@ -5,6 +5,7 @@ import ErrorModal from "../ErrorModal/ErrorModal";
 import FormInput from "../FormInput/FormInput";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { useVerificationContext } from "@/contexts/VerificationContext/VerificationContext";
+import { BackendUrl } from "@/config";
 
 export type OtpVerificationProps = {
     notify: (state: boolean) => void,
@@ -17,7 +18,7 @@ export default function OtpVerification({ verificationSessionId, notify }: OtpVe
     const { updateVContext } = useVerificationContext();
     const [ modalError, setModalError ] = useState<string | null>(null);
 
-    const { isLoading, triggerFetch } = useFetch<string>(`http://localhost:3000/otp/verify`, {
+    const { isLoading, triggerFetch } = useFetch<string>(`${BackendUrl}/otp/verify`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -4,8 +4,9 @@ import FormInput from "@/components/FormInput/FormInput";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ErrorModal from "@/components/ErrorModal/ErrorModal";
 import PrimaryButton from "@/components/PrimaryButton/PrimaryButton";
-import { ChangeEvent, FormEvent, useCallback, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import { useVerificationContext } from "@/contexts/VerificationContext/VerificationContext";
+import { BackendUrl } from "@/config";
 
 export default function ForgotPasswordVerification() {
     
@@ -21,12 +22,18 @@ export default function ForgotPasswordVerification() {
     const [ otp, setOtp ] = useState<string>("");
     const [ modalError, setModalError ] = useState<string | null>(null);
 
-    const { isLoading, triggerFetch } = useFetch<string>("http://localhost:3000/login/forgot-password/verification", {
+    const { isLoading, error, triggerFetch } = useFetch<string>(`${BackendUrl}/login/forgot-password/verification`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         }
-    }, undefined, { requestOnExplicitTrigger: true })
+    }, undefined, { requestOnExplicitTrigger: true });
+
+    useEffect(() => {
+        if(!error?.error) return;
+
+        setModalError(error.error || "Invalid otp or Session Id");
+    }, [error])
 
     function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
         const { value } = event.target;
@@ -34,7 +41,7 @@ export default function ForgotPasswordVerification() {
         
         if((value.length > 0 && isNaN(integer)) || value.length > 6) return;
 
-        setOtp(value);        
+        setOtp(value);
     }
 
     async function handleOnSubmit(event: FormEvent) {
@@ -48,10 +55,7 @@ export default function ForgotPasswordVerification() {
         }
 
         const token = await triggerFetch(verificationCreds);
-        if(!token) {
-            setModalError("Invalid otp or Session Id");
-            return;
-        }
+        if(!token) return;
         
         navigate(`/forgot-password/create-password/${token}`);
         return;

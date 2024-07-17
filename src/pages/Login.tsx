@@ -2,6 +2,7 @@ import ErrorModal from "@/components/ErrorModal/ErrorModal";
 import Form from "@/components/Form/Form";
 import FormInput from "@/components/FormInput/FormInput";
 import PrimaryButton from "@/components/PrimaryButton/PrimaryButton";
+import { BackendUrl } from "@/config";
 import { useAuth } from "@/contexts/AuthContext/AuthContext";
 import { PlayerInfo, usePlayerContext } from "@/contexts/PlayerContext/PlayerContext";
 import useFetch from "@/hooks/useFetch";
@@ -29,7 +30,7 @@ export default function Login() {
         usernameOrEmail: "",
     });
 
-    const { error, isLoading, triggerFetch } = useFetch<LoginSuccessPayload | errorString>("http://127.0.0.1:3000/login", {
+    const { error, isLoading, triggerFetch } = useFetch<LoginSuccessPayload | errorString>(`${BackendUrl}/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

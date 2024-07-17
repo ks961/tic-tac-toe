@@ -18,9 +18,7 @@ export type DropdownProps = {
 //     bottom: "left-1/2 -translate-x-1/2 translate-y-1/4",
 //     top: "-bottom-1/2 -translate-x-1/2 -translate-y-1/2",
 // }
-function getComponentName(component: any) {
-    return ((component as React.ReactElement<any>).type as any).name as string;
-}
+
 
 const cardDefaultClasses = "w-max h-full absolute mt-2 left-1/2 -translate-x-1/2 translate-y-1/4 p-3 rounded-md justify-center invisible opacity-0 transition-all duration-200 ease-in-out";
 const dropDownConDefaultClasses = "relative w-10";
@@ -28,13 +26,6 @@ const dropDownConDefaultClasses = "relative w-10";
 export default function Dropdown({ children, className, cardClassName }: DropdownProps) {
 
     const [  HoverElement, DropDownElement ] = React.Children.toArray(children);
-
-    const hoverElement = getComponentName(HoverElement);
-    const dropDownElement = getComponentName(DropDownElement);
-
-    if(Array.isArray(children) && ((children.length !== 2) || (hoverElement !== "HoverElement" || dropDownElement !== "DropDownElement"))) {
-        throw new Error("Only two component is accepted, wrapped inside: HoverElement and DropDownElement");
-    }
         
     const hoverElementRef = useRef<HTMLDivElement>(null);
     const targetElementRef = useRef<HTMLDivElement>(null);

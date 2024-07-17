@@ -4,8 +4,9 @@ import FormInput from "@/components/FormInput/FormInput";
 import { validateEmail, validateUsername } from "@/utils";
 import ErrorModal from "@/components/ErrorModal/ErrorModal";
 import PrimaryButton from "@/components/PrimaryButton/PrimaryButton";
-import { useState, ChangeEvent, FormEvent, useCallback } from "react";
+import { useState, ChangeEvent, FormEvent, useCallback, useEffect } from "react";
 import { useVerificationContext } from "@/contexts/VerificationContext/VerificationContext";
+import { BackendUrl } from "@/config";
 
 
 export default function ForgotPassword() {
@@ -15,12 +16,19 @@ export default function ForgotPassword() {
     const [ modalError, setModalError ] = useState<string | null>(null);
     const [ usernameOrEmail, setUsernameOrEmail ] = useState<string>("");
 
-    const { isLoading, triggerFetch } = useFetch<string>("http://localhost:3000/login/forgot-password", {
+    const { isLoading, error, triggerFetch } = useFetch<string>(`${BackendUrl}/login/forgot-password`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         }
     }, undefined, { requestOnExplicitTrigger: true });
+
+
+    useEffect(() => {
+        if(!error?.error) return; 
+
+        setModalError(error.error);
+    }, [error]);
     
     async function handleOnSubmit(event: FormEvent) {
         event.preventDefault();
@@ -33,8 +41,7 @@ export default function ForgotPassword() {
         const sessionId = await triggerFetch({
             usernameOrEmail,
         });
-        if(!sessionId)
-            return setModalError("Session is invalid.");
+        if(!sessionId) return;
 
         updateVContext(true);
         navigate(`/forgot-password/verification/${sessionId}`);
