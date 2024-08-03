@@ -1,6 +1,4 @@
-# TIC TAC TOE
-
-This project was bootstrapped with [Vite](https://vitejs.dev/) for building a React application.
+# [TIC TAC TOE](https://tictactoe.sudhanshu.io)
 
 ## Getting Started
 
