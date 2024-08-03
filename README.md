@@ -46,5 +46,5 @@ Sudhanshu - ksudhanshu961@gmail.com
 
 Project Link: [https://github.com/ks961/tic-tac-toe](https://github.com/ks961/tic-tac-toe)
 
-## APP LIVE
+## GAME LIVE
 [TIC-TAC-TOE](https://tictactoe.sudhanshu.io)
